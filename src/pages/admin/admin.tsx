@@ -2,7 +2,7 @@
 function Admin() {
   return (
     <div>
-      
+      salom
     </div>
   )
 }
