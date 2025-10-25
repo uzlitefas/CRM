@@ -9,7 +9,7 @@ import StudentPage from "./pages/studentPage";
 import TeacherPage from "./pages/teacherPage";
 import Admin from "./pages/admin/admin";
 import Manager from "./pages/manager/manager";
-import Auth from "./pages/auth";
+import { Auth } from "./pages/auth";
 
 function App() {
   return (
