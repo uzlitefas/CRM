@@ -10,6 +10,8 @@ import TeacherPage from "./pages/teacherPage";
 import Admin from "./pages/admin/admin";
 import Manager from "./pages/manager/manager";
 import Auth from "./pages/auth";
+import AdminStudents from "./pages/admin/admin-students";
+import AdminTeachers from "./pages/admin/admin-teachers";
 
 function App() {
   return (
@@ -26,7 +28,9 @@ function App() {
             </div>
           }
         >
-          <Route path="" element={<Admin />} />
+          <Route path="/admin/students" element={<AdminStudents />} />
+          <Route path="/admin/teachers" element={<AdminTeachers />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="credite" element={<CreditePage />} />
           <Route path="financial" element={<FinancialPage />} />
           <Route path="groups" element={<GroupPage />} />
