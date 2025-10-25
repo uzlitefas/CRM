@@ -9,9 +9,9 @@ import StudentPage from "./pages/studentPage";
 import TeacherPage from "./pages/teacherPage";
 import Admin from "./pages/admin/admin";
 import Manager from "./pages/manager/manager";
-import Auth from "./pages/auth";
 import AdminStudents from "./pages/admin/admin-students";
 import AdminTeachers from "./pages/admin/admin-teachers";
+import { Auth } from "./pages/auth";
 
 function App() {
   return (
