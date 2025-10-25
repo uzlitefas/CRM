@@ -4,11 +4,14 @@ import "./index.css";
 import App from "./app.tsx";
 import "./i18.ts";
 import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "./components/shared/theme-provider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   </StrictMode>
 );
