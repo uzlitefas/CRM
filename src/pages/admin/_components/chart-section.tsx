@@ -15,7 +15,7 @@ import {
 const pieData = [
   { name: "Yanvar", value: 400 },
   { name: "Fevral", value: 300 },
-  { name: "Mart", value: 300 },``
+  { name: "Mart", value: 300 },
   { name: "Aprel", value: 200 },
 ];
 
