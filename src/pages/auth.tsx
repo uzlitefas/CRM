@@ -17,19 +17,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-
-function validatePhone(phone: string): string | null {
-  const regex = /^\+998\d{9}$/
-  if (!phone.trim()) return "Telefon raqami kiritilishi shart!"
-  if (!regex.test(phone.replace(/\s/g, ""))) return "Telefon raqam noto'g'ri formatda!"
-  return null
-}
-
-function validatePassword(password: string): string | null {
-  if (!password.trim()) return "Parol kiritilishi shart!"
-  if (password.length < 4) return "Parol kamida 4 ta belgidan iborat bo'lishi kerak!"
-  return null
-}
+import { validatePhone, validatePassword } from "@/lib/validation" 
 
 export function Auth({ className, ...props }: React.ComponentProps<"div">) {
   const [phone, setPhone] = useState("")
@@ -49,7 +37,7 @@ export function Auth({ className, ...props }: React.ComponentProps<"div">) {
     }
 
     setErrors({})
-    const cleanPhone = phone.replace(/\s/g, "")
+    const cleanPhone = phone.replace(/\s|-/g, "")
 
     if (cleanPhone === "+998919408180") {
       navigate("/student")
@@ -57,7 +45,7 @@ export function Auth({ className, ...props }: React.ComponentProps<"div">) {
       navigate("/admin")
     } else {
       setErrors({
-        phone: "Noto'g'ri telefon raqam yoki parol!",
+        phone: "Nomer to'g'ri yoz => keyin kel ",
       })
     }
   }
@@ -90,12 +78,7 @@ export function Auth({ className, ...props }: React.ComponentProps<"div">) {
               <Field>
                 <div className="flex items-center justify-between">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="text-sm text-muted-foreground hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
+                  
                 </div>
                 <Input
                   id="password"
@@ -115,8 +98,6 @@ export function Auth({ className, ...props }: React.ComponentProps<"div">) {
                   Login
                 </Button>
               </div>
-
-              
             </FieldGroup>
           </form>
         </CardContent>
