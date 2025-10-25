@@ -1,5 +1,5 @@
 function LidlarPage() {
-  return <div></div>;
+  return <div>bu lid</div>;
 }
 
 export default LidlarPage;

@@ -1,5 +1,5 @@
 function TeacherPage() {
-  return <div></div>;
+  return <div>salomat</div>;
 }
 
 export default TeacherPage;
