@@ -2,10 +2,12 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 
-import StudentPage from "./pages/studentPage.tsx";
+import Auth from "./pages/auth.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <StudentPage />
+    <Auth />
+
+    
   </StrictMode>
 );
