@@ -38,6 +38,7 @@ function App() {
           <Route path="settings" element={<SettingsPage />} />
           <Route path="students" element={<StudentPage />} />
           <Route path="teachers" element={<TeacherPage />} />
+          <Route path="manager" element={<Manager />} />
         </Route>
         <Route
           path={"/manager"}
