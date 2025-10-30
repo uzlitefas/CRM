@@ -16,15 +16,9 @@ const ManagerAdd: React.FC<ManagerAddProps> = ({ onSuccess }) => {
   const [loading, setLoading] = useState(false);
 
   const token = useTokenStore((state) => state.accessToken);
-  const token = useTokenStore((state) => state.accessToken);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!firstName || !lastName || !phone || !password) {
-      toast.error("Iltimos, barcha majburiy maydonlarni to‘ldiring!");
-      return;
-    }
 
     setLoading(true);
 
@@ -159,49 +153,7 @@ const ManagerAdd: React.FC<ManagerAddProps> = ({ onSuccess }) => {
       </div>
     </div>
   );
-};
+}
 
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    maxWidth: "480px",
-    margin: "40px auto",
-    padding: "24px",
-    borderRadius: "8px",
-    backgroundColor: "#ffffff",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-  },
-  heading: {
-    textAlign: "center",
-    marginBottom: "20px",
-    color: "#333",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  formGroup: {
-    marginBottom: "15px",
-  },
-  label: {
-    marginBottom: "6px",
-    fontWeight: 600,
-  },
-  input: {
-    padding: "10px",
-    fontSize: "14px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-  },
-  button: {
-    padding: "10px",
-    fontSize: "16px",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    transition: "background 0.2s ease",
-  },
-};
 
 export default ManagerAdd;
