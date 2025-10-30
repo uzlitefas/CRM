@@ -3,13 +3,13 @@ import { create } from "zustand";
 interface TokenState {
   accessToken: string | null;
   refreshToken: string | null;
-  setTokens: (access: string | null, refresh: string | null) => void;
+  setTokens: (accessToken: string, refreshToken: string) => void;
   clearTokens: () => void;
 }
 
 export const useTokenStore = create<TokenState>((set) => ({
   accessToken: null,
   refreshToken: null,
-  setTokens: (access, refresh) => set({ accessToken: access, refreshToken: refresh }),
+  setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
   clearTokens: () => set({ accessToken: null, refreshToken: null }),
 }));

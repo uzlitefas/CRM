@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { api } from "@/service/api"; // api instance
-import { useTokenStore } from "@/stores/storeToken"; // token store (Zustand)
+import { useTokenStore } from "@/stores/storeToken";
+import { api } from "@/service";
 
 interface ManagerAddProps {
   onSuccess?: () => void;
@@ -15,7 +15,7 @@ const ManagerAdd: React.FC<ManagerAddProps> = ({ onSuccess }) => {
   const [monthlySalary, setMonthlySalary] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const token = useTokenStore((state) => state.accessToken); // ✅ tokenni olish
+  const token = useTokenStore((state) => state.accessToken);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +40,7 @@ const ManagerAdd: React.FC<ManagerAddProps> = ({ onSuccess }) => {
       console.log("Yuborilayotgan DTO:", dto);
       console.log("Token:", token);
 
-      const res = await api.post("/managers", dto); // ✅ api orqali yuboramiz
+      const res = await api.post("/managers", dto);
       console.log("Manager added:", res.data);
 
       alert("Manager muvaffaqiyatli qo‘shildi!");
@@ -114,7 +114,6 @@ const ManagerAdd: React.FC<ManagerAddProps> = ({ onSuccess }) => {
   );
 };
 
-// 🎨 Inline style
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
     maxWidth: "480px",

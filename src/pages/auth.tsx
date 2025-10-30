@@ -10,7 +10,7 @@ export default function Auth() {
   const setTokens = useTokenStore((s) => s.setTokens);
   const nav = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
@@ -18,10 +18,12 @@ export default function Auth() {
       const res = await api.post("/auth/login", { phone, password });
       const { user, accessToken, refreshToken } = res.data;
       setTokens(accessToken, refreshToken);
-      if (user.role === "ADMIN") nav("/admin");
-      else nav("/manager");
+
+      if (user.role === "admin") nav("/admin");
+      else nav("/admin");
     } catch (err) {
       alert("Login amalga oshmadi!");
+      console.error(err);
     } finally {
       setLoading(false);
     }
