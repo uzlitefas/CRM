@@ -3,7 +3,7 @@ import { useTokenStore } from "@/stores/storeToken";
 
 export const api = axios.create({
   baseURL: "http://localhost:3000",
-  withCredentials: true, // agar refresh cookie bilan bo‘lsa
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
@@ -14,33 +14,33 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// 🔁 Token muddati tugasa — avtomatik refresh qilish
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalRequest = error.config;
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const { refreshToken, setTokens } = useTokenStore.getState();
+      const { refreshToken, setTokens, clearTokens } = useTokenStore.getState();
+
       if (refreshToken) {
         try {
           const res = await axios.post(
             "http://localhost:3000/auth/refresh",
             {},
-            {
-              headers: { Authorization: `Bearer ${refreshToken}` },
-            }
+            { headers: { Authorization: `Bearer ${refreshToken}` } }
           );
+
           setTokens(res.data.accessToken, res.data.refreshToken);
           originalRequest.headers.Authorization = `Bearer ${res.data.accessToken}`;
-          return api(originalRequest); // so‘rovni qayta yuboramiz
+          return api(originalRequest);
         } catch (err) {
-          console.error("Refresh token ishlamadi:", err);
-          useTokenStore.getState().clearTokens();
+          clearTokens();
           window.location.href = "/login";
         }
       }
     }
+
     return Promise.reject(error);
   }
 );

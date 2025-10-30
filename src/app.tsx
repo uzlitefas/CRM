@@ -12,6 +12,7 @@ import Manager from "./pages/manager/manager";
 import AdminStudents from "./pages/admin/admin-students";
 import AdminTeachers from "./pages/admin/admin-teachers";
 import Auth from "./pages/auth";
+import CreateGroup from "./components/group/groupCreate";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/admin/students" element={<AdminStudents />} />
           <Route path="/admin/teachers" element={<AdminTeachers />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/create-group" element={<CreateGroup />} />
           <Route path="credite" element={<CreditePage />} />
           <Route path="financial" element={<FinancialPage />} />
           <Route path="groups" element={<GroupPage />} />
