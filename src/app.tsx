@@ -11,7 +11,7 @@ import Admin from "./pages/admin/admin";
 import Manager from "./pages/manager/manager";
 import AdminStudents from "./pages/admin/admin-students";
 import AdminTeachers from "./pages/admin/admin-teachers";
-import { Auth } from "./pages/auth";
+import Auth from "./pages/auth";
 
 function App() {
   return (
@@ -38,7 +38,7 @@ function App() {
           <Route path="settings" element={<SettingsPage />} />
           <Route path="students" element={<StudentPage />} />
           <Route path="teachers" element={<TeacherPage />} />
-          <Route path="manager" element={<Manager />} />
+          <Route path="/admin/manager" element={<Manager />} />
         </Route>
         <Route
           path={"/manager"}

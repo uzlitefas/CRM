@@ -1,79 +1,48 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/stores/authStore";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useTokenStore } from "@/stores/storeToken";
+import { api } from "@/service";
 
 export default function Auth() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const { login, loading, user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const setTokens = useTokenStore((s) => s.setTokens);
+  const nav = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await login(phone, password);
-    if (success) {
-      alert("Kirish muvaffaqiyatli!");
-    } else {
-      alert("Login amalga oshmadi. Raqam yoki parolni tekshiring.");
+    setLoading(true);
+
+    try {
+      const res = await api.post("/auth/login", { phone, password });
+      const { user, accessToken, refreshToken } = res.data;
+      setTokens(accessToken, refreshToken);
+      if (user.role === "ADMIN") nav("/admin");
+      else nav("/manager");
+    } catch (err) {
+      alert("Login amalga oshmadi!");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-muted/20">
-      <Card className="w-[380px]">
-        <CardHeader>
-          <CardTitle>Telefon raqam orqali kirish</CardTitle>
-          <CardDescription>Raqamingiz va parolingizni kiriting</CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <label htmlFor="phone">Telefon raqami</label>
-                <input
-                  id="phone"
-                  type="tel"
-                  placeholder="+998901234567"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <label htmlFor="password">Parol</label>
-                <input
-                  id="password"
-                  type="password"
-                  placeholder="Parolni kiriting"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col">
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "Kirilmoqda..." : "Kirish"}
-            </Button>
-
-            {user && (
-              <pre className="mt-4 bg-muted text-sm p-3 rounded-md w-full overflow-auto">
-                {JSON.stringify(user, null, 2)}
-              </pre>
-            )}
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        placeholder="Telefon raqam"
+      />
+      <input
+        value={password}
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Parol"
+      />
+      <button type="submit" disabled={loading}>
+        {loading ? "Kirilmoqda..." : "Kirish"}
+      </button>
+    </form>
   );
 }
