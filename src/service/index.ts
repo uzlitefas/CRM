@@ -4,6 +4,7 @@ import { useTokenStore } from "@/stores/storeToken";
 export const api = axios.create({
   baseURL: "http://localhost:3000",
   withCredentials: true,
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
@@ -18,6 +19,7 @@ api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalRequest = error.config;
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const { refreshToken, setTokens, clearTokens } = useTokenStore.getState();
@@ -26,12 +28,12 @@ api.interceptors.response.use(
           const res = await axios.post(
             "http://localhost:3000/auth/refresh",
             {},
-            {
-              headers: { Authorization: `Bearer ${refreshToken}` },
-            }
+            { headers: { Authorization: `Bearer ${refreshToken}` } }
           );
+
           setTokens(res.data.accessToken, res.data.refreshToken);
           originalRequest.headers.Authorization = `Bearer ${res.data.accessToken}`;
+          return api(originalRequest);
           return api(originalRequest);
         } catch (err) {
           console.error("Refresh token ishlamadi:", err);
@@ -43,6 +45,7 @@ api.interceptors.response.use(
         window.location.href = "/login";
       }
     }
+
     return Promise.reject(error);
   }
 );
