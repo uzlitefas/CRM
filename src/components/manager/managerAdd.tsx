@@ -1,127 +1,117 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
 import { api } from "@/service";
 
-interface ManagerAddProps {
-  onSuccess?: () => void;
-}
+const ManagerAdd: React.FC = () => {
+  const navigate = useNavigate();
 
-const ManagerAdd: React.FC<ManagerAddProps> = ({ onSuccess }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
-  const [monthlySalary, setMonthlySalary] = useState("");
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    password: "",
+    photoUrl: "",
+    monthlySalary: "",
+  });
+
   const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
 
     try {
-      const dto = {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        phone: phone.trim(),
-        password: password.trim(),
-        photoUrl: photoUrl.trim() || null,
-        monthlySalary: parseFloat(monthlySalary) || 0,
+      const manager = {
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        phone: form.phone.trim(),
+        password: form.password.trim(),
+        photoUrl: form.photoUrl.trim() || null,
+        monthlySalary: parseFloat(form.monthlySalary) || 0,
       };
 
-      console.log("📤 Yuborilayotgan DTO:", dto);
-
-      const res = await api.post("/managers", dto);
-      console.log("✅ Manager added:", res.data);
-
-      // Forma tozalash
-      setFirstName("");
-      setLastName("");
-      setPhone("");
-      setPassword("");
-      setPhotoUrl("");
-      setMonthlySalary("");
-
-      if (onSuccess) onSuccess();
+      await api.post("/managers", manager);
+      toast.success("✅ Manager muvaffaqiyatli qo‘shildi!");
+      navigate("/managers");
     } catch (error: any) {
-      console.error("❌ Manager qo‘shishda xato:", error);
+      console.error("Manager qo‘shishda xatolik:", error);
+      const message =
+        error.response?.data?.message ||
+        "Manager qo‘shishda xatolik yuz berdi.";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 transition-colors duration-300 px-4">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-all">
-        <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
-          🧑‍💼 Yangi Manager Qo‘shish
-        </h2>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {[
-            { label: "Ism", value: firstName, setter: setFirstName },
-            { label: "Familiya", value: lastName, setter: setLastName },
-            { label: "Telefon raqam", value: phone, setter: setPhone },
-            {
-              label: "Parol",
-              value: password,
-              setter: setPassword,
-              type: "password",
-            },
-          ].map(({ label, value, setter, type }) => (
-            <div key={label}>
-              <label className="block text-gray-700 dark:text-gray-200 mb-1 font-semibold">
-                {label}
-              </label>
-              <input
-                type={type || "text"}
-                value={value}
-                onChange={(e) => setter(e.target.value)}
-                required
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              />
-            </div>
-          ))}
-
-          <div>
-            <label className="block text-gray-700 dark:text-gray-200 mb-1 font-semibold">
-              Rasm URL (ixtiyoriy)
-            </label>
-            <input
-              type="text"
-              value={photoUrl}
-              onChange={(e) => setPhotoUrl(e.target.value)}
-              placeholder="https://example.com/photo.jpg"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-xl text-center font-semibold">
+            🧑‍💼 Yangi Manager Qo‘shish
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              name="firstName"
+              placeholder="Ism"
+              value={form.firstName}
+              onChange={handleChange}
+              required
             />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 dark:text-gray-200 mb-1 font-semibold">
-              Oylik maosh (ixtiyoriy)
-            </label>
-            <input
+            <Input
+              name="lastName"
+              placeholder="Familiya"
+              value={form.lastName}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              name="phone"
+              placeholder="Telefon raqam"
+              value={form.phone}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              type="password"
+              name="password"
+              placeholder="Parol"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            <Input
+              name="photoUrl"
+              placeholder="Rasm URL (ixtiyoriy)"
+              value={form.photoUrl}
+              onChange={handleChange}
+            />
+            <Input
               type="number"
-              value={monthlySalary}
-              onChange={(e) => setMonthlySalary(e.target.value)}
-              placeholder="Masalan: 3000000"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              name="monthlySalary"
+              placeholder="Oylik maoshi"
+              value={form.monthlySalary}
+              onChange={handleChange}
             />
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-2 mt-4 text-white font-semibold rounded-lg transition-all ${
-              loading
-                ? "bg-blue-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-            }`}
-          >
-            {loading ? "Qo‘shilmoqda..." : "Qo‘shish"}
-          </button>
-        </form>
-      </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Yuborilmoqda..." : "Qo‘shish"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
