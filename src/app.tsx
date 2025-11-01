@@ -4,9 +4,7 @@ import Admin from "./pages/admin/admin";
 import Manager from "./pages/manager/manager";
 
 import Auth from "./pages/auth";
-import TeacherPage from "./pages/teacherPage";
 import StudentPage from "./pages/studentPage";
-import { CreateRoom } from "./components/group/group";
 
 function App() {
   return (
@@ -26,8 +24,6 @@ function App() {
           <Route path="" element={<Admin />} />
           <Route path="manager" element={<Manager />} />
           <Route path="student" element={<StudentPage />} />
-          <Route path="group" element={<CreateRoom />} />
-          <Route path="teacher" element={<TeacherPage />} />
         </Route>
       </Routes>
     </div>

@@ -1,11 +1,5 @@
-import ManagerAdd from "@/components/manager/managerAdd";
-
 function Manager() {
-  return (
-    <div>
-      <ManagerAdd />
-    </div>
-  );
+  return <div>add manager </div>;
 }
 
 export default Manager;
