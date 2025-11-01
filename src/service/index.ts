@@ -1,46 +1,62 @@
 import axios from "axios";
 import { useTokenStore } from "@/stores/storeToken";
 
+// Axios instance yaratamiz
 export const api = axios.create({
   baseURL: "http://localhost:3000",
   withCredentials: true,
-  withCredentials: true,
 });
 
+// Request interceptor — accessToken’ni headerga qo‘shadi
 api.interceptors.request.use((config) => {
-  const token = useTokenStore.getState().accessToken;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const { accessToken } = useTokenStore.getState();
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
 
+// Response interceptor — token yangilashni boshqaradi
 api.interceptors.response.use(
-  (res) => res,
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
+    // 401 bo‘lsa va hali qayta urinilmagan bo‘lsa
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+
       const { refreshToken, setTokens, clearTokens } = useTokenStore.getState();
+
       if (refreshToken) {
         try {
+          // Refresh token bilan yangi token olish
           const res = await axios.post(
             "http://localhost:3000/auth/refresh",
             {},
-            { headers: { Authorization: `Bearer ${refreshToken}` } }
+            {
+              headers: {
+                Authorization: `Bearer ${refreshToken}`,
+              },
+            }
           );
 
-          setTokens(res.data.accessToken, res.data.refreshToken);
-          originalRequest.headers.Authorization = `Bearer ${res.data.accessToken}`;
+          const newAccessToken = res.data.accessToken;
+          const newRefreshToken = res.data.refreshToken;
+
+          // Tokenlarni yangilash
+          setTokens(newAccessToken, newRefreshToken);
+
+          // Eski so‘rovni yangilangan token bilan qayta yuborish
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return api(originalRequest);
-          return api(originalRequest);
-        } catch (err) {
-          console.error("Refresh token ishlamadi:", err);
+        } catch (refreshError) {
+          console.error("❌ Refresh token ishlamadi:", refreshError);
           clearTokens();
           window.location.href = "/login";
         }
       } else {
+        // Refresh token yo‘q bo‘lsa — tozalaymiz
         clearTokens();
         window.location.href = "/login";
       }

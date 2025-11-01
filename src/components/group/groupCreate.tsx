@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner"; // yoki boshqa toast kutubxona
 import { api } from "@/service";
 
 export default function CreateGroupForm() {
@@ -13,18 +12,15 @@ export default function CreateGroupForm() {
     e.preventDefault();
 
     if (!name.trim()) {
-      toast.error("Guruh nomi kiritilishi kerak!");
       return;
     }
 
     try {
       const res = await api.post("/groups", { name, roomId });
-      toast.success(` Guruh yaratildi: ${res.data.name}`);
       setName("");
       setRoomId("");
     } catch (err) {
       console.error(err);
-      toast.error(" Guruh yaratishda xatolik!");
     }
   };
 

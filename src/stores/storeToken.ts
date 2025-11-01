@@ -8,8 +8,18 @@ interface TokenState {
 }
 
 export const useTokenStore = create<TokenState>((set) => ({
-  accessToken: null,
-  refreshToken: null,
-  setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
-  clearTokens: () => set({ accessToken: null, refreshToken: null }),
+  accessToken: localStorage.getItem("accessToken"),
+  refreshToken: localStorage.getItem("refreshToken"),
+
+  setTokens: (accessToken, refreshToken) => {
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+    set({ accessToken, refreshToken });
+  },
+
+  clearTokens: () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    set({ accessToken: null, refreshToken: null });
+  },
 }));
